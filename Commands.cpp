@@ -860,7 +860,11 @@ Command * SmallShell::CreateCommand(const char* cmd_line)
         string cmd_s = _trim(string(cmd_line));
         string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
 
-        if (firstWord.compare("pwd") == 0) {
+        if(strchr(cmd_line, '>') != nullptr) //redirection command
+        {
+            return new RedirectionCommand(cmd_line);
+        }
+        else if (firstWord.compare("pwd") == 0) {
             return new GetCurrDirCommand(cmd_line);
         }
         else if (firstWord.compare("showpid") == 0) {
@@ -893,10 +897,6 @@ Command * SmallShell::CreateCommand(const char* cmd_line)
         else if(firstWord.compare("chmod") == 0)
         {
             return new ChmodCommand(cmd_line);
-        }
-        else if(strchr(cmd_line, '>') != nullptr) //redirection command
-        {
-            return new RedirectionCommand(cmd_line);
         }
         else
         {
